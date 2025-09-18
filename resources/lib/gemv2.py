@@ -60,7 +60,12 @@ class GemV2:
         """Get a Gem V2 API V2 browse format"""
         url = FORMAT_BY_ID.format(path)
         jsObj = GemV2.scrape_json(url)
-        if jsObj is None or 'content' not in jsObj:
+        if jsObj is None:
+            return None
+        if 'content' not in jsObj:
+            if 'lineups' in jsObj and 'results' in jsObj['lineups']:
+                return jsObj['lineups']['results']
+                
             log(f'Unable to find key content in response from {url}')
             return None
         content = jsObj['content'][0]
