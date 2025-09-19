@@ -74,6 +74,7 @@ class GemV2:
         
         if 'requestedType' in jsObj and jsObj['requestedType'].lower() == 'season':
             # find season from url
+            log(f'Request: {jsObj}')
             season_no = re.search("s(\d+)($|\?)", url.lower())
             if season_no is not None:
                 for lineup in content['lineups']:
