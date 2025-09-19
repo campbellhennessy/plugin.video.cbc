@@ -163,6 +163,7 @@ class GemV2:
 
     @staticmethod
     def normalized_format_path(item):
+        log(f'NFP: {item}')
         if 'idMedia' in item:
             return item['idMedia']
         if 'type' in item and item['type'].lower() == 'show':
