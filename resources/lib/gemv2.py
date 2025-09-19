@@ -60,7 +60,16 @@ class GemV2:
         """Get a Gem V2 API V2 browse format"""
         url = FORMAT_BY_ID.format(path)
         jsObj = GemV2.scrape_json(url)
-        if jsObj is None or 'content' not in jsObj:
+        if jsObj is None:
+            return None
+        if 'content' not in jsObj:
+            if 'lineups' in jsObj and 'results' in jsObj['lineups']:
+                items = []
+                for result in jsObj['lineups']['results']:
+                    if 'items' in result:
+                        items += result['items']
+                return items
+
             log(f'Unable to find key content in response from {url}')
             return None
         content = jsObj['content'][0]
@@ -151,7 +160,10 @@ class GemV2:
             if 'credits' in meta:
                 retval['info_labels']['cast'] = meta['credits'][0]['peoples'].split(',')
         if 'idMedia' in item:
-            retval['app_code'] = 'medianet' if item['mediaType'] == 'LiveToVod' else 'gem'
+            if 'mediaType' in item:
+                retval['app_code'] = 'medianet' if item['mediaType'] == 'LiveToVod' else 'gem'
+            else:
+                retval['app_code'] = 'medianet' if item['type'] == 'LiveToVod' else 'gem'
             None
         return retval
 
